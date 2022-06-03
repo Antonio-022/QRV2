@@ -1,0 +1,65 @@
+﻿@page "/fetchdata"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using Interfaceblazor.Data
+@inject WeatherForecastService ForecastService
+
+<div class="fade-in">
+
+    <h2 class="text-center mb-3">Cargos</h2>
+
+    <form>
+        <div class="form-group">
+            <input type="text" class="form-control" id="cargo" placeholder="Nombre del cargo">
+          </div>
+    </form>
+
+    <div class="row mb-5">
+        <div class="col">
+            <button class="btn btn-primary full-width"><i class="fa-solid fa-plus"></i> Crear nuevo cargo</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-primary full-width"><i class="fa-solid fa-list"></i> Traer todos los cargos</button>
+        </div>
+    </div>
+
+    @if (forecasts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Temp. (C)</th>
+                    <th>Temp. (F)</th>
+                    <th>Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var forecast in forecasts)
+                {
+                    <tr>
+                        <td>@forecast.Date.ToShortDateString()</td>
+                        <td>@forecast.TemperatureC</td>
+                        <td>@forecast.TemperatureF</td>
+                        <td>@forecast.Summary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+}
